@@ -83,11 +83,36 @@ class ItemsViewController: UITableViewController {
         if editingStyle == .delete {
             let item = itemStore.allItems[indexPath.row]
             
+            //Adding .actionSheet
+            let title = "Delete \(item.name)?"
+            let message = "Are you sure you want to delete this item?"
+            let ac = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            ac.addAction(cancelAction)
+            
+            let deleteAction = UIAlertAction(title: "Delete", style: .destructive, handler: { (action) -> Void in
+                //Remove the item from the store
+                self.itemStore.removeItem(item)
+                
+                //Remove the row from the table view with animation
+                self.tableView.deleteRows(at: [indexPath], with: .automatic)
+            })
+            ac.addAction(deleteAction)
+            
+            //Present alert controller
+            present(ac, animated: true, completion: nil)
+            
             //Remove the item from the store
             itemStore.removeItem(item)
             
             //Remove animation
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        //Update the model
+        itemStore.moveItem(from: sourceIndexPath.row, to: destinationIndexPath.row)
     }
 }
