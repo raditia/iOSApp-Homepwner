@@ -122,8 +122,28 @@ class ItemsViewController: UITableViewController {
         }
     }
     
+    //Moving cells
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         //Update the model
         itemStore.moveItem(from: sourceIndexPath.row, to: destinationIndexPath.row)
+    }
+    
+    
+    //Passing data around
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        //If the triggered segue is the "showItem" segue
+        switch segue.identifier {
+        case "showItem"?:
+            //Which row is tapped
+            if let row = tableView.indexPathForSelectedRow?.row {
+                
+                //Get the item associated
+                let item = itemStore.allItems[row]
+                let detailViewController = segue.destination as! DetailViewController
+                detailViewController.item = item
+            }
+        default:
+            preconditionFailure("Unexpected segue identifier")
+        }
     }
 }
