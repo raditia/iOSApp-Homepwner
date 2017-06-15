@@ -20,8 +20,6 @@ class Item: NSObject {
         self.serialNumber = serialNumber
         self.valueInDollars = valueInDollars
         self.dateCreated = Date()
-        
-        super.init()
     }
     
     convenience init(random: Bool = false) {
@@ -38,12 +36,13 @@ class Item: NSObject {
             let randomName = "\(randomAdjective) \(randomNoun)"
             let randomValue = Int(arc4random_uniform(100))
             let randomSerialNumber =
-            UUID().uuidString.components(separatedBy: "-").first!
+                UUID().uuidString.components(separatedBy: "-").first!
             
             self.init(name: randomName,
-                serialNumber: randomSerialNumber,
-                valueInDollars: randomValue)
-        } else {
+                      serialNumber: randomSerialNumber,
+                      valueInDollars: randomValue)
+        }
+        else {
             self.init(name: "", serialNumber: nil, valueInDollars: 0)
         }
     }

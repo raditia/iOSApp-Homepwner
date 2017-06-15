@@ -13,14 +13,14 @@ class ItemsViewController: UITableViewController {
     var itemStore: ItemStore!
     
     @IBAction func addNewItem(_ sender: UIButton) {
-        //Create a new item and add it to the store
+        // Create a new Item and add it to the store
         let newItem = itemStore.createItem()
         
-        //Placing the new item in the array
+        // Figure out where that item is in the array
         if let index = itemStore.allItems.index(of: newItem) {
             let indexPath = IndexPath(row: index, section: 0)
             
-            //insert new row into the table
+            // Insert this new row into the table.
             tableView.insertRows(at: [indexPath], with: .automatic)
         }
     }
@@ -41,9 +41,6 @@ class ItemsViewController: UITableViewController {
             //Enter editing mode
             setEditing(true, animated: true)
         }
-        
-        
-        
     }
     
     override func viewDidLoad() {
@@ -55,6 +52,9 @@ class ItemsViewController: UITableViewController {
         let insets = UIEdgeInsets(top: statusBarHeight, left: 0, bottom: 0, right: 0)
         tableView.contentInset = insets
         tableView.scrollIndicatorInsets = insets
+        
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 65
     }
     
     
@@ -63,19 +63,30 @@ class ItemsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView,
-        cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            // Create an instance of UITableViewCell, with default appearance
-            let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell", for: indexPath)
-            
-            // Set the text on the cell with the description of the item
-            // that is at the nth index of items, where n = row this cell
-            // will appear in on the tableview
-            let item = itemStore.allItems[indexPath.row]
-            
-            cell.textLabel?.text = item.name
-            cell.detailTextLabel?.text = "$\(item.valueInDollars)"
-            
-            return cell
+                            cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // Create an instance of UITableViewCell, with default appearance
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell",
+                                                 for: indexPath) as! ItemCell
+        
+        // Set the text on the cell with the description of the item
+        // that is at the nth index of items, where n = row this cell
+        // will appear in on the tableview
+        let item = itemStore.allItems[indexPath.row]
+        
+        cell.nameLabel.text = item.name
+        cell.serialNumberLabel.text = item.serialNumber
+        
+        //Give color to the value of dollar
+        if item.valueInDollars <= 50 {
+            cell.valueLabel.textColor = UIColor.green
+        }
+        else {
+            cell.valueLabel.textColor = UIColor.red
+        }
+    
+        cell.valueLabel.text = "$\(item.valueInDollars)"
+        
+        return cell
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
