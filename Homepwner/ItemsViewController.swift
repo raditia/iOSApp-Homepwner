@@ -57,6 +57,12 @@ class ItemsViewController: UITableViewController {
         tableView.estimatedRowHeight = 65
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        tableView.reloadData()
+    }
+    
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return itemStore.allItems.count
@@ -113,12 +119,6 @@ class ItemsViewController: UITableViewController {
             
             //Present alert controller
             present(ac, animated: true, completion: nil)
-            
-            //Remove the item from the store
-            itemStore.removeItem(item)
-            
-            //Remove animation
-            tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
     
