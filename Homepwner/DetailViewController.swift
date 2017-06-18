@@ -19,7 +19,11 @@ class DetailViewController: UIViewController , UITextFieldDelegate {
     @IBAction func backgroundTapped(_ sender: UITapGestureRecognizer) {
         view.endEditing(true)
     }
-    var item: Item!
+    var item: Item! {
+        didSet {
+            navigationItem.title = item.name
+        }
+    }
     
     //Create number formatter
     let numberFormatter: NumberFormatter = {
@@ -71,5 +75,15 @@ class DetailViewController: UIViewController , UITextFieldDelegate {
         textField.resignFirstResponder()
         
         return true
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.identifier {
+        case "changeDate"?:
+            let dateCreatedViewController = segue.destination as! DateCreatedViewController
+            dateCreatedViewController.item = item
+        default:
+            preconditionFailure("Unexpected segue identifier.")
+        }
     }
 }
